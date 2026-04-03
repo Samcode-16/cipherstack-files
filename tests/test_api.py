@@ -164,7 +164,6 @@ class TestTextEncryption:
         # Should be valid hex
         try:
             bytes.fromhex(ciphertext)
-            assert True
         except ValueError:
             assert False, "Ciphertext is not valid hex"
     
@@ -614,7 +613,6 @@ class TestDESCipher:
         # Should be valid hex
         try:
             bytes.fromhex(ciphertext)
-            assert True
         except ValueError:
             assert False, "Ciphertext is not valid hex"
 
