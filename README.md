@@ -1,4 +1,4 @@
-# 🔐 3-Layer File Encryption System
+# 3-Layer File Encryption System
 
 A complete file encryption/decryption system using a 3-layer cryptographic pipeline:
 1. **Playfair Cipher** (substitution)
@@ -18,7 +18,7 @@ Run this ONCE to generate and save the system keys to `.keys.json`:
 python -m backend.keys --init
 ```
 
-⚠️ **Important**: Keep `.keys.json` safe! It's in `.gitignore` but contains all encryption keys.
+**Important:** Keep `.keys.json` safe! It's in `.gitignore` but contains all encryption keys.
 
 ### 3. Install Testing Dependencies (Optional)
 ```bash
@@ -284,17 +284,17 @@ pytest tests/ -k "encrypt" -v
 - `tests/conftest.py` - Pytest configuration and shared fixtures
 
 **Documentation:**
-- 📖 [TESTING.md](TESTING.md) - Complete testing guide with patterns
-- ⚡ [TESTING_QUICK_REFERENCE.md](TESTING_QUICK_REFERENCE.md) - Quick lookup
-- 🎯 [FASTAPI_TESTING_FEATURES.md](FASTAPI_TESTING_FEATURES.md) - All features explained
+- [TESTING.md](TESTING.md) - Complete testing guide with patterns
+- [TESTING_QUICK_REFERENCE.md](TESTING_QUICK_REFERENCE.md) - Quick lookup
+- [FASTAPI_TESTING_FEATURES.md](FASTAPI_TESTING_FEATURES.md) - All features explained
 
 **Test Coverage:**
-- ✅ 38 tests total
-- ✅ All 5 API endpoints
-- ✅ All 3 encryption layers
-- ✅ Error handling & validation
-- ✅ Round-trip encryption/decryption
-- ✅ File operations & edge cases
+- 38 tests total
+- All 5 API endpoints
+- All 3 encryption layers
+- Error handling & validation
+- Round-trip encryption/decryption
+- File operations & edge cases
 
 See [TESTING.md](TESTING.md) for comprehensive guide.
 
@@ -372,7 +372,7 @@ Column 1, Column 2, Column 3, Column 4, Column 5
 
 ## Security Notes
 
-### ⚠️ Academic Use Only
+### Academic Use Only
 
 This system is designed for **educational purposes** and demonstrates:
 - How symmetric encryption works
@@ -511,14 +511,14 @@ This project uses FastAPI's built-in testing capabilities:
 - Setup/teardown with fixtures
 
 **Features Demonstrated:**
-- ✅ Testing endpoints with different HTTP methods
-- ✅ File upload testing
-- ✅ JSON request/response body testing
-- ✅ Error status code validation
-- ✅ Round-trip encryption/decryption verification
-- ✅ Performance testing
-- ✅ Fixture dependency injection
-- ✅ Test cleanup and resources
+- Testing endpoints with different HTTP methods
+- File upload testing
+- JSON request/response body testing
+- Error status code validation
+- Round-trip encryption/decryption verification
+- Performance testing
+- Fixture dependency injection
+- Test cleanup and resources
 
 See [TESTING.md](TESTING.md) for full documentation on:
 - How to write tests
