@@ -370,6 +370,7 @@ async def process_file(
             result = pipeline.decrypt_text(file_content)
             # Remove .encrypted extension if present
             if file.filename.endswith('.encrypted'):
+                # Remove the .encrypted suffix (10 characters)
                 output_filename = file.filename[:-10]
             else:
                 output_filename = f"decrypted_{file.filename}"
@@ -379,9 +380,12 @@ async def process_file(
         output_path = get_unique_filename(output_path)
         output_path.write_text(result, encoding='utf-8')
         
+        # Return the ACTUAL filename that was saved (with _1, _2, etc. if needed)
+        actual_filename = output_path.name
+        
         return JSONResponse({
             "success": True,
-            "filename": output_filename
+            "filename": actual_filename
         })
     
     except Exception as e:

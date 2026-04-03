@@ -156,60 +156,80 @@ def get_square_display(key: str) -> str:
 
 def remove_fillers(text: str, original_length: int) -> str:
     """
-    Remove Playfair fillers and padding to recover original length.
+    Remove Playfair fillers and padding to recover original text.
     
-    During encryption, filler X's are inserted between duplicate letters to make them
-    into separate digraphs, and trailing X may be added for odd-length text. This function
-    removes those fillers by:
-    1. Identifying X characters  
-    2. Removing them
-    3. Truncating to original length
+    Playfair inserts 'X' as a filler between duplicate letters during encryption prep:
+      INPUT: "HELLO" (duplicate L's)
+      PREPARED: "HE", "LX", "LO" (X inserted as filler)
+      DECRYPTED: "HELXLO" (X filler still present)
     
-    NOTE: This assumes the original plaintext contains few (if any) X characters.
-          This is valid for most English text where X appears in < 1% of messages.
+    And 'X' is added as padding for odd-length text:
+      INPUT: "HELP" (4 chars, even)
+      PREPARED: "HE", "LP" (no padding needed)
+      
+      INPUT: "HEL" (3 chars, odd)
+      PREPARED: "HE", "LX" (X added as padding)
+    
+    This function removes extra X's by:
+    1. Removing X's from the RIGHT (likely padding first)
+    2. Removing X's from the LEFT (likely fillers)
+    3. Finally truncating to original length
+    
+    Since original text may contain X's (rarely), we rely on original_length.
     
     Args:
-        text: Decrypted Playfair output (may contain filler X's and padding)
-        original_length: The original plaintext length before Playfair encryption
+        text: Decrypted Playfair output (may contain extra X's)
+        original_length: The original plaintext length before any encryption
     
     Returns:
-        Text with X fillers removed if possible, or truncated to original_length
+        Text with X fillers/padding removed, exact original length
     """
-    # Strategy: Remove X characters until we reach the original length
-    # This works because Playfair only adds X's, not removes characters
     
-    # If text already matches original length, return as-is
+    # If already the right length, return as-is
     if len(text) == original_length:
         return text
     
-    # If text is longer, remove X's to bring it down to original length
-    if len(text) > original_length:
-        # Count how many excess characters we have
-        excess = len(text) - original_length
-        
-        # Try to remove X's first (they're likely fillers)
-        x_count = text.count('X')
-        x_to_remove = min(excess, x_count)
-        
-        if x_to_remove > 0:
-            # Remove X's from the text
-            result = text
-            for _ in range(x_to_remove):
-                result = result.replace('X', '', 1)  # Remove one X at a time
-            
-            # If we've removed enough, return
-            if len(result) == original_length:
-                return result
-            
-            # If not, truncate the rest
-            return result[:original_length]
-        else:
-            # No X's to remove, just truncate
-            return text[:original_length]
+    # If text is too short, something went wrong - truncate padding Xs from right
+    if len(text) < original_length:
+        return text
     
-    # If text is shorter than original length, return as-is
-    # (This shouldn't happen if encryption/decryption is correct)
-    return text
+    # If text is longer than original (which is normal due to Playfair padding/fillers)
+    # Remove extra characters
+    excess = len(text) - original_length
+    
+    # Strategy: Remove X's intelligently
+    # 1. First, remove trailing X's (likely padding for odd-length input)
+    # 2. Then, remove any remaining X's from the middle (likely fillers for duplicates)
+    # 3. Finally, truncate to exact original length
+    
+    result = text
+    removed = 0
+    
+    # Step 1: Remove trailing X's (padding)
+    while removed < excess and result and result[-1] == 'X':
+        result = result[:-1]
+        removed += 1
+    
+    # Step 2: Remove any remaining X's from the middle if still excess
+    if removed < excess:
+        # Count how many more X's we need to remove
+        still_need = excess - removed
+        x_in_middle = result.count('X')
+        
+        if x_in_middle > 0:
+            # Remove X's from right to left to preserve left content for truncation
+            to_remove = min(still_need, x_in_middle)
+            for _ in range(to_remove):
+                # Find the rightmost X and remove it
+                idx = result.rfind('X')
+                if idx != -1:
+                    result = result[:idx] + result[idx+1:]
+                    removed += 1
+    
+    # Step 3: Truncate to exact original length (safety measure)
+    result = result[:original_length]
+    
+    return result
 
 
 # ---------------------------------------------------------------------------
