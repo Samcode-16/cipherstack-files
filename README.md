@@ -235,29 +235,49 @@ Or test with text:
 
 ```
 File_Encrypt/
-├── app.py                          # Flask web application
-├── requirements.txt                # Python dependencies
-├── .keys.json                      # Encryption keys (auto-generated, git-ignored)
+├── app.py                                  # FastAPI web application
+├── requirements.txt                        # Python dependencies
+├── pytest.ini                              # Pytest configuration
+├── .keys.json                              # Encryption keys (auto-generated, git-ignored)
 │
 ├── backend/
 │   ├── __init__.py
-│   ├── keys.py                     # Key generation & loading
-│   ├── playfair.py                 # Layer 1: Playfair cipher
-│   ├── columnar.py                 # Layer 2: Columnar transposition
-│   ├── des_cipher.py               # Layer 3: DES block cipher
-│   ├── pipeline.py                 # 3-layer pipeline orchestration
-│   └── file_io.py                  # File operations with metadata
+│   ├── keys.py                             # Key generation & loading
+│   ├── playfair.py                         # Layer 1: Playfair cipher
+│   ├── columnar.py                         # Layer 2: Columnar transposition
+│   ├── des_cipher.py                       # Layer 3: DES block cipher
+│   ├── pipeline.py                         # 3-layer pipeline orchestration
+│   ├── file_io.py                          # File operations with metadata
+│   └── format_preserving_encryption.py     # Formatting preservation utility
 │
 ├── frontend/
 │   ├── static/
-│   │   ├── app.js                  # JavaScript UI logic
-│   │   └── style.css               # CSS styling
+│   │   ├── app.js                          # JavaScript UI logic
+│   │   └── style.css                       # CSS styling
 │   └── templates/
-│       └── index.html              # Web interface
+│       └── index.html                      # Web interface
 │
-├── uploads/                        # Temporary upload storage
-├── outputs/                        # Encrypted/decrypted files
-└── tests/                          # Unit tests (optional)
+├── tests/                                  # Automated test suite (20 test files)
+│   ├── test_api.py
+│   ├── test_playfair_*.py                  # Playfair cipher tests
+│   ├── test_encryption_flow.py
+│   ├── test_decrypt_*.py
+│   ├── test_formatting_preservation.py
+│   ├── conftest.py                         # Pytest configuration & fixtures
+│   ├── examples.py                         # Annotated test examples
+│   └── ... (15 other test files)
+│
+├── debug/                                  # Debug & diagnostic scripts
+│   ├── debug_pipeline.py
+│   ├── debug_detailed.py
+│   ├── debug_corruption.py
+│   └── debug_playfair_issue.py
+│
+├── uploads/                                # Temporary upload storage
+├── outputs/                                # Encrypted/decrypted files
+├── REPOSITORY_STRUCTURE.md                 # Detailed folder organization guide
+└── README.md                               # This file
+```
 ```
 
 ---
@@ -266,37 +286,75 @@ File_Encrypt/
 
 FastAPI provides excellent built-in testing support. All tests use the `TestClient` from FastAPI, requiring no live server.
 
+### Running Tests
+
 **Quick Start:**
 ```bash
 # Run all tests
-pytest tests/ -v
+pytest
+
+# Run with verbose output
+pytest -v
 
 # Run with coverage report
-pytest tests/ --cov=backend --cov=app --cov-report=html
+pytest --cov=backend --cov=app --cov-report=html
 
 # Run tests matching pattern
-pytest tests/ -k "encrypt" -v
+pytest -k "encrypt" -v
+
+# Run specific test file
+pytest tests/test_playfair_known.py
 ```
 
-**Available Test Files:**
-- `tests/test_api.py` - Comprehensive test suite (38 tests)
-- `tests/examples.py` - Annotated examples for learning
-- `tests/conftest.py` - Pytest configuration and shared fixtures
+### Test Files Organization
 
-**Documentation:**
-- [TESTING.md](TESTING.md) - Complete testing guide with patterns
-- [TESTING_QUICK_REFERENCE.md](TESTING_QUICK_REFERENCE.md) - Quick lookup
-- [FASTAPI_TESTING_FEATURES.md](FASTAPI_TESTING_FEATURES.md) - All features explained
+**Location:** `tests/` folder (20 automated test files)
 
-**Test Coverage:**
-- 38 tests total
+**Core Test Suites:**
+- `test_api.py` - FastAPI endpoint tests (38 tests)
+- `test_playfair_*.py` - Playfair cipher algorithm tests (6 files)
+  - `test_playfair_known.py` - Known plaintext-ciphertext pairs
+  - `test_playfair_monarchy.py` - Classic "MONARCHY" example
+  - `test_playfair_roundtrip.py` - Encryption/decryption round trips
+  - `test_playfair_direct.py` - Direct cipher tests
+  - `test_playfair_wrl.py` - Word example tests
+- `test_encryption_flow.py` - End-to-end pipeline tests
+- `test_decrypt_*.py` - Decryption-specific tests (3 files)
+- `test_formatting_preservation.py` - Text formatting tests
+- `test_frontend_workflow.py` - Frontend integration tests
+- Other specialized tests (13 total files)
+
+**Shared Fixtures:**
+- `conftest.py` - Pytest configuration and shared test fixtures
+- `examples.py` - Annotated examples for learning
+
+### Debug Scripts
+
+**Location:** `debug/` folder (for manual investigation)
+
+Debug scripts are **NOT automated tests** but tools for developers to investigate issues:
+- `debug_pipeline.py` - Trace encryption pipeline execution
+- `debug_detailed.py` - Detailed step-by-step debugging
+- `debug_corruption.py` - Diagnose file corruption issues
+- `debug_playfair_issue.py` - Playfair cipher debugging
+
+**Usage:**
+```bash
+python debug/debug_pipeline.py
+python debug/debug_detailed.py
+```
+
+### Test Coverage
+
+- 20+ automated test files
 - All 5 API endpoints
-- All 3 encryption layers
+- All 3 encryption layers (Playfair, Columnar, DES)
 - Error handling & validation
-- Round-trip encryption/decryption
+- Round-trip encryption/decryption verification
 - File operations & edge cases
+- Frontend workflow integration
 
-See [TESTING.md](TESTING.md) for comprehensive guide.
+See [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for complete folder organization and guidelines on when to use tests vs debug scripts.
 
 ---
 
