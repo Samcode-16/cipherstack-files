@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureEncrypt — Your Files. Your Rules.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Ambient background blobs ───────────────────────────── -->
+  <div class="bg-blob blob-1" aria-hidden="true"></div>
+  <div class="bg-blob blob-2" aria-hidden="true"></div>
+  <div class="bg-grid"       aria-hidden="true"></div>
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <span>Secure<em>Encrypt</em></span>
+    </div>
+    <div class="header-pills">
+      <span class="pill">3-layer</span>
+      <span class="pill">zero-knowledge</span>
+    </div>
+  </header>
+
+  <!-- ── Hero ────────────────────────────────────────────────── -->
+  <section class="hero">
+    <p class="hero-eyebrow">Classical cryptography · triple-layer</p>
+    <h1 class="hero-title">Your Files.<br><span class="accent">Your Rules.</span></h1>
+    <p class="hero-sub">Upload any file, enter your three secret keys — we handle everything else.</p>
+  </section>
+
+  <!-- ── Main card ───────────────────────────────────────────── -->
+  <main class="app-card" id="appCard">
+
+    <!-- Mode toggle -->
+    <div class="mode-toggle" role="group" aria-label="Choose mode">
+      <button class="toggle-btn active" id="encryptBtn"
+              onclick="setMode('encrypt')" aria-pressed="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Encrypt
+      </button>
+      <button class="toggle-btn" id="decryptBtn"
+              onclick="setMode('decrypt')" aria-pressed="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+          <line x1="3" y1="3" x2="7" y2="7"/>
+        </svg>
+        Decrypt
+      </button>
+    </div>
+
+    <!-- ── Step 1: File ─── -->
+    <div class="step-block">
+      <div class="step-label">
+        <span class="step-num">01</span>
+        <span>Select your file</span>
+      </div>
+
+      <!-- Drop zone -->
+      <div class="dropzone" id="dropzone"
+           role="button" tabindex="0"
+           aria-label="Upload file — click or drag and drop"
+           ondragover="onDragOver(event)"
+           ondragleave="onDragLeave(event)"
+           ondrop="onDrop(event)"
+           onclick="triggerFilePicker()"
+           onkeydown="if(event.key==='Enter')triggerFilePicker()">
+        <div class="dz-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 16 12 12 8 16"/>
+            <line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+        </div>
+        <p class="dz-title">Drag &amp; drop your file here</p>
+        <p class="dz-sub">or</p>
+        <button class="browse-btn" type="button" onclick="event.stopPropagation(); triggerFilePicker()">
+          Browse Files
+        </button>
+        <p class="dz-hint">Supports all file types &nbsp;·&nbsp; Max 200 MB</p>
+      </div>
+
+      <!-- File selected state -->
+      <div class="file-row" id="fileRow" aria-live="polite">
+        <!-- Populated by JS -->
+      </div>
+
+      <input type="file" id="filePicker" style="display:none" onchange="onFilePicked(this)" />
+    </div>
+
+    <!-- ── Step 2: System Keys ─── -->
+    <div class="step-block">
+      <div class="step-label">
+        <span class="step-num">02</span>
+        <span>Encryption keys</span>
+      </div>
+
+      <div class="info-banner">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span>Using auto-generated system keys for maximum security. No user input required. Keys are managed server-side and never transmitted.</span>
+      </div>
+    </div>
+
+    <!-- ── Progress ─── -->
+    <div class="progress-block" id="progressBlock" aria-live="polite">
+      <div class="progress-header">
+        <span id="progressLabel">Starting...</span>
+        <span id="progressPct" class="progress-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="step-list" id="stepList">
+        <div class="step-item" id="s1">
+          <div class="s-dot" id="d1"></div>
+          <span>Applying layer 1 (Playfair)</span>
+        </div>
+        <div class="step-item" id="s2">
+          <div class="s-dot" id="d2"></div>
+          <span>Applying layer 2 (Transposition)</span>
+        </div>
+        <div class="step-item" id="s3">
+          <div class="s-dot" id="d3"></div>
+          <span>Applying layer 3 (DES)</span>
+        </div>
+        <div class="step-item" id="s4">
+          <div class="s-dot" id="d4"></div>
+          <span>Saving output file</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Output ─── -->
+    <div class="output-block" id="outputBlock" aria-live="polite">
+      <div class="output-inner">
+        <div class="success-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span id="outputLabel">Encryption complete</span>
+        </div>
+        <p class="output-sub">Your file has been processed through all 3 layers.</p>
+        <a id="downloadLink" class="download-btn" href="#" download>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download File
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Error ─── -->
+    <div class="error-block" id="errorBlock" role="alert">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="errorMsg">Something went wrong.</span>
+    </div>
+
+    <!-- ── Action button ─── -->
+    <button class="action-btn" id="actionBtn" type="button" onclick="handleSubmit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="btnIcon">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <span id="btnText">Encrypt File</span>
+    </button>
+
+    <p class="bottom-note">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Your file never leaves this server unencrypted
+    </p>
+  </main>
+
+  <!-- ── How it works (scrollable below) ──────────────────────── -->
+  <section class="how-section">
+    <h2>How it works</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <h3>Upload your file</h3>
+        <p>Any file type — documents, images, archives. Drag it in or pick it from your device.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <h3>Enter 3 keys</h3>
+        <p>Three separate keys drive three independent cipher layers. Keep them safe — you'll need all three to decrypt.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <h3>Download result</h3>
+        <p>The encrypted file is ready instantly. Decrypt it anytime using the same three keys in reverse.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    SecureEncrypt &nbsp;·&nbsp; Classical Cryptography Project &nbsp;·&nbsp; 3-layer cascade cipher
+  </footer>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

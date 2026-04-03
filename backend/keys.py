@@ -50,15 +50,15 @@ def _gen_playfair_key(length: int = 12) -> str:
     return "".join(sample)
 
 
-def _gen_columnar_key(width: int = 8) -> str:
+def _gen_columnar_key(width: int = 9) -> str:
     """
     Return a random permutation of *width* distinct uppercase letters.
     The columnar transposition cipher uses alphabetical rank of each letter
     to determine column read-order, so the key space is width! permutations.
 
-    width=8 → 8! = 40 320 permutations.
-    Width is even to maintain even-length digraphs from Playfair layer
-    for proper cipher alignment in the 3-layer pipeline.
+    width=9 → 9! = 362 880 permutations (easily brute-forced on its own,
+    but this is Layer 2 of 3 so composite security is the goal).
+    Increase to 12 for stronger standalone columnar security.
     """
     alphabet = [c for c in string.ascii_uppercase if c != "J"]
     sample   = secrets.SystemRandom().sample(alphabet, width)
@@ -86,7 +86,7 @@ def generate_keys() -> dict[str, str]:
     """Generate a fresh set of keys for all three pipeline layers."""
     return {
         "playfair": _gen_playfair_key(12),
-        "columnar":  _gen_columnar_key(8),  # Even length for Playfair alignment
+        "columnar":  _gen_columnar_key(9),
         "des":       _gen_des_key(),
     }
 

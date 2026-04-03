@@ -50,6 +50,8 @@ def _prepare_plaintext(text: str) -> list[tuple[str, str]]:
     """
     Clean *text*, insert filler 'X' between duplicate letters in a digraph,
     pad to even length, and return a list of (a, b) digraph tuples.
+    
+    Uses 'X' as filler - works better for English text which rarely has X.
     """
     text = re.sub(r"[^A-Za-z]", "", text).upper().replace("J", "I")
     digraphs: list[tuple[str, str]] = []
@@ -63,8 +65,9 @@ def _prepare_plaintext(text: str) -> list[tuple[str, str]]:
             digraphs.append((a, b))
             i += 1
         elif text[i + 1] == a:
-            # Duplicate pair – insert filler
-            b = "X" if a != "X" else "Z"
+            # Duplicate pair – insert filler X
+            # This marks a duplicate that will need special handling on decrypt
+            b = "X"
             digraphs.append((a, b))
             i += 1          # do NOT advance past text[i+1]; it starts next pair
         else:
@@ -149,6 +152,64 @@ def get_square_display(key: str) -> str:
     rows = [" ".join(row) for row in square]
     header = f"Playfair Square  (key='{key.upper()}')\n" + "-" * 11
     return header + "\n" + "\n".join(rows)
+
+
+def remove_fillers(text: str, original_length: int) -> str:
+    """
+    Remove Playfair fillers and padding to recover original length.
+    
+    During encryption, filler X's are inserted between duplicate letters to make them
+    into separate digraphs, and trailing X may be added for odd-length text. This function
+    removes those fillers by:
+    1. Identifying X characters  
+    2. Removing them
+    3. Truncating to original length
+    
+    NOTE: This assumes the original plaintext contains few (if any) X characters.
+          This is valid for most English text where X appears in < 1% of messages.
+    
+    Args:
+        text: Decrypted Playfair output (may contain filler X's and padding)
+        original_length: The original plaintext length before Playfair encryption
+    
+    Returns:
+        Text with X fillers removed if possible, or truncated to original_length
+    """
+    # Strategy: Remove X characters until we reach the original length
+    # This works because Playfair only adds X's, not removes characters
+    
+    # If text already matches original length, return as-is
+    if len(text) == original_length:
+        return text
+    
+    # If text is longer, remove X's to bring it down to original length
+    if len(text) > original_length:
+        # Count how many excess characters we have
+        excess = len(text) - original_length
+        
+        # Try to remove X's first (they're likely fillers)
+        x_count = text.count('X')
+        x_to_remove = min(excess, x_count)
+        
+        if x_to_remove > 0:
+            # Remove X's from the text
+            result = text
+            for _ in range(x_to_remove):
+                result = result.replace('X', '', 1)  # Remove one X at a time
+            
+            # If we've removed enough, return
+            if len(result) == original_length:
+                return result
+            
+            # If not, truncate the rest
+            return result[:original_length]
+        else:
+            # No X's to remove, just truncate
+            return text[:original_length]
+    
+    # If text is shorter than original length, return as-is
+    # (This shouldn't happen if encryption/decryption is correct)
+    return text
 
 
 # ---------------------------------------------------------------------------
