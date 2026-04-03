@@ -1,0 +1,283 @@
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: GET http://testserver/api/status "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 400 Bad Request"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 400 Bad Request"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 500 Internal Server Error"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:100]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[102:114]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[116:140]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[144:156]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 400 Bad Request"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:100]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[102:114]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[116:126]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[130:142]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:99]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[101:113]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[115:125]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[129:141]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:100]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[102:114]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[116:126]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[130:142]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:101]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[103:115]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[117:127]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[131:143]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:100]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[102:114]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[116:126]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[130:142]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:106]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[108:120]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[122:132]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[136:10486896]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 413 Request Entity Too Large"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:110]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[112:124]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[126:150]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[154:236]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:110]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[112:124]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[126:150]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[154:236]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:109]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[111:123]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[125:149]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[153:177]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt "HTTP/1.1 500 Internal Server Error"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:105]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[107:119]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[121:131]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[135:170]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_begin with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[36:55]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[57:110]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_field with data[112:124]
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_header_value with data[126:150]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_header_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_headers_finished with no data
+DEBUG    python_multipart.multipart:multipart.py:626 Calling on_part_data with data[154:236]
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_part_end with no data
+DEBUG    python_multipart.multipart:multipart.py:629 Calling on_end with no data
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 422 Unprocessable Entity"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/encrypt-text "HTTP/1.1 200 OK"
+DEBUG    asyncio:proactor_events.py:633 Using proactor: IocpProactor
+INFO     httpx:_client.py:1025 HTTP Request: POST http://testserver/api/decrypt-text "HTTP/1.1 200 OK"
