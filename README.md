@@ -649,6 +649,3 @@ For issues or questions:
 
 ---
 
-**Last Updated:** April 2, 2026
-**Version:** 3.0 (3-Layer Pipeline)
-**Framework:** FastAPI + Uvicorn
