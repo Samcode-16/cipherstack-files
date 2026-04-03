@@ -172,7 +172,6 @@ async function handleSubmit() {
   // Build form data
   const formData = new FormData();
   formData.append('file', selectedFile);
-  formData.append('mode', currentMode);
 
   // Disable button
   const btn = $('actionBtn');
@@ -182,7 +181,7 @@ async function handleSubmit() {
   showProgress();
 
   try {
-    const resp = await fetch('/process', {
+    const resp = await fetch(`/process?mode=${encodeURIComponent(currentMode)}`, {
       method: 'POST',
       body: formData,
     });
