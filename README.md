@@ -578,13 +578,33 @@ This project uses FastAPI's built-in testing capabilities:
 - Fixture dependency injection
 - Test cleanup and resources
 
-See [TESTING.md](TESTING.md) for full documentation on:
-- How to write tests
-- Using fixtures effectively
-- Testing patterns and best practices
-- Parametrized testing
-- Coverage reports
-- CI/CD integration
+**How to write tests:**
+- See `tests/conftest.py` for fixture patterns
+- See `tests/examples.py` for annotated examples
+- See individual test files in `tests/` for practical patterns
+
+**Using fixtures effectively:**
+- Fixtures defined in `conftest.py` are automatically available
+- Use `@pytest.fixture` for reusable test data
+- Dependency injection with fixture parameters
+
+**Testing patterns and best practices:**
+Check [REPOSITORY_STRUCTURE.md](REPOSITORY_STRUCTURE.md) for detailed guidelines on:
+- When to write automated tests vs debug scripts
+- Test organization best practices
+- How pytest discovers and runs tests
+
+**Parametrized testing:**
+Use `@pytest.mark.parametrize` decorator to test multiple inputs. Examples in test files.
+
+**Coverage reports:**
+```bash
+pytest --cov=backend --cov=app --cov-report=html
+# Opens coverage/ folder with detailed reports
+```
+
+**CI/CD integration:**
+Tests are ready for GitHub Actions, GitLab CI, or Jenkins - just run `pytest` in your pipeline.
 
 ---
 
