@@ -18,6 +18,79 @@ The pipeline loads keys from backend.keys module (expects --init to be run first
 from backend import playfair, columnar, des_cipher
 from backend.keys import load_keys
 from pathlib import Path
+import re
+import json
+import base64
+
+
+# ---------------------------------------------------------------------------
+# Formatting preservation helpers
+# ---------------------------------------------------------------------------
+
+def _extract_format_info(plaintext: str) -> dict:
+    """
+    Extract formatting info from original text.
+    Stores: case pattern (upper/lower), position of spaces and punctuation.
+    
+    Returns dict with 'case_pattern' (binary string) and 'spacing' (list of positions)
+    """
+    # Store case pattern: 1 for uppercase, 0 for lowercase (letters only)
+    case_pattern = ''.join('1' if c.isupper() else '0' for c in plaintext if c.isalpha())
+    
+    # Store non-alpha characters (spaces, punctuation) with their positions
+    spacing_chars = []
+    letter_count = 0
+    for c in plaintext:
+        if c.isalpha():
+            letter_count += 1
+        elif not c.isalnum():  # Any non-alphanumeric character
+            spacing_chars.append({
+                'pos': letter_count,  # Position after which this character appears
+                'char': c
+            })
+    
+    return {
+        'case_pattern': case_pattern,
+        'spacing': spacing_chars
+    }
+
+
+def _restore_format(decrypted_text: str, format_info: dict) -> str:
+    """
+    Restore original formatting (case and spacing) to decrypted text.
+    
+    Args:
+        decrypted_text: The normalized decrypted text (uppercase, no spaces)
+        format_info: The formatting metadata extracted during encryption
+    
+    Returns:
+        Text with original formatting restored
+    """
+    if not format_info:
+        return decrypted_text
+    
+    # Step 1: Restore case
+    result = []
+    for i, c in enumerate(decrypted_text):
+        if i < len(format_info.get('case_pattern', '')):
+            if format_info['case_pattern'][i] == '1':
+                result.append(c.upper())
+            else:
+                result.append(c.lower())
+        else:
+            result.append(c)
+    
+    text_with_case = ''.join(result)
+    
+    # Step 2: Restore spacing - insert from right to left
+    # For items at same position, insert in reverse order of original appearance
+    spacing_list = format_info.get('spacing', [])
+    for idx, spacing in sorted(enumerate(spacing_list), key=lambda x: (-x[1]['pos'], -x[0])):
+        pos = spacing['pos']
+        if pos <= len(text_with_case):
+            text_with_case = text_with_case[:pos] + spacing['char'] + text_with_case[pos:]
+    
+    return text_with_case
 
 
 # ---------------------------------------------------------------------------
@@ -33,7 +106,7 @@ def encrypt_text(plaintext: str) -> str:
     
     Returns:
         Hex-encoded final ciphertext with metadata prefix (can be safely stored/transmitted)
-        Format: [4-digit length][2-digit columnar-padding]hex-ciphertext
+        Format: [4-digit format-len][hex-format-data][4-digit length][2-digit columnar-padding]hex-ciphertext
     
     Raises:
         FileNotFoundError: If keys not initialized (run: python -m backend.keys --init)
@@ -45,8 +118,13 @@ def encrypt_text(plaintext: str) -> str:
     columnar_key = keys["columnar"]
     des_key = keys["des"]
     
+    # STEP 1: Extract and encode formatting info
+    format_info = _extract_format_info(plaintext)
+    format_json = json.dumps(format_info)
+    format_encoded = base64.b64encode(format_json.encode()).hex()  # hex string
+    format_len_hex = f"{len(format_encoded)//2:04x}"  # length in hex (in bytes)
+    
     # Store original plaintext length (normalized: uppercase, no spaces/punctuation)
-    import re
     normalized_plaintext = re.sub(r"[^A-Za-z]", "", plaintext).upper()
     original_length = len(normalized_plaintext)
     
@@ -63,8 +141,8 @@ def encrypt_text(plaintext: str) -> str:
     layer3 = des_cipher.encrypt(layer2, des_key)
     
     # Encode metadata into result:
-    # [4 hex digits for original length][2 hex digits for columnar padding][DES ciphertext]
-    result = f"{original_length:04x}{col_padding_needed:02x}" + layer3
+    # [4 hex digits for format length][hex-format-data][4 hex digits for original length][2 hex digits for columnar padding][DES ciphertext]
+    result = format_len_hex + format_encoded + f"{original_length:04x}{col_padding_needed:02x}" + layer3
     
     return result
 
@@ -75,10 +153,10 @@ def decrypt_text(ciphertext_hex: str) -> str:
     
     Args:
         ciphertext_hex: Hex-encoded ciphertext from encrypt_text()
-                        Format: [4-digit length][2-digit columnar-padding]hex-ciphertext
+                        Format: [4-digit format-len][hex-format-data][4-digit length][2-digit columnar-padding]hex-ciphertext
     
     Returns:
-        Decrypted plaintext (exact original)
+        Decrypted plaintext with original formatting (case and spacing) restored
     
     Raises:
         FileNotFoundError: If keys not initialized
@@ -90,11 +168,32 @@ def decrypt_text(ciphertext_hex: str) -> str:
     columnar_key = keys["columnar"]
     des_key = keys["des"]
     
-    # Extract metadata and ciphertext
+    # STEP 1: Extract format info from beginning of ciphertext
+    format_info = None
     try:
-        original_length = int(ciphertext_hex[:4], 16)       # First 4 hex digits
-        col_padding_needed = int(ciphertext_hex[4:6], 16)   # Next 2 hex digits
-        des_input_hex = ciphertext_hex[6:]                  # Rest is DES ciphertext
+        format_len = int(ciphertext_hex[:4], 16)  # First 4 hex digits = length in bytes
+        format_hex_start = 4
+        format_hex_end = format_hex_start + (format_len * 2)  # Each byte = 2 hex chars
+        
+        if format_hex_end > len(ciphertext_hex):
+            # Fallback: old format without formatting info
+            format_info = None
+            remaining_hex = ciphertext_hex
+        else:
+            format_hex = ciphertext_hex[format_hex_start:format_hex_end]
+            format_encoded = bytes.fromhex(format_hex).decode()
+            format_info = json.loads(base64.b64decode(format_encoded).decode())
+            remaining_hex = ciphertext_hex[format_hex_end:]
+    except Exception:
+        # Fallback: couldn't parse format info, try old format
+        format_info = None
+        remaining_hex = ciphertext_hex
+    
+    # STEP 2: Extract encryption metadata and decrypt
+    try:
+        original_length = int(remaining_hex[:4], 16)       # First 4 hex digits
+        col_padding_needed = int(remaining_hex[4:6], 16)   # Next 2 hex digits
+        des_input_hex = remaining_hex[6:]                  # Rest is DES ciphertext
     except (ValueError, IndexError):
         raise ValueError("Invalid ciphertext format: expected 6+ hex digits for metadata")
     
@@ -115,6 +214,9 @@ def decrypt_text(ciphertext_hex: str) -> str:
     
     # Remove Playfair fillers and padding by truncating to original length
     plaintext = playfair.remove_fillers(layer1, original_length)
+    
+    # STEP 3: Restore original formatting (case and spacing)
+    plaintext = _restore_format(plaintext, format_info)
     
     return plaintext
 
