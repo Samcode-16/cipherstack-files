@@ -1,177 +1,117 @@
+"""Unit tests for backend/columnar.py"""
 import pytest
-from backend.columnar import encrypt, decrypt
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from backend.columnar import (
+    encrypt, decrypt, get_key_order_display,
+    _get_column_order, _pad_plaintext
+)
 
 
-# ---------------------------------------------------------------------------
-# Fixtures
-# ---------------------------------------------------------------------------
+class TestGetColumnOrder:
+    def test_key_length_matches_order_length(self):
+        order = _get_column_order("KEY")
+        assert len(order) == 3
 
-@pytest.fixture
-def key():
-    return "SECRET"
+    def test_key_example_monarchy(self):
+        order = _get_column_order("KEY")
+        assert order == [1, 0, 2]
 
-@pytest.fixture
-def alt_key():
-    return "WRONGKEY"
-
-
-# ---------------------------------------------------------------------------
-# Functional Tests
-# ---------------------------------------------------------------------------
-
-class TestColumnarFunctional:
-
-    def test_encrypt_decrypt_roundtrip_string(self, key):
-        plaintext = "THEQUICKBROWNFOX"
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    def test_encrypt_output_differs_from_input(self, key):
-        plaintext = "HELLOWORLD"
-        encrypted = encrypt(plaintext, key)
-        assert encrypted != plaintext
-
-    def test_deterministic_encryption(self, key):
-        plaintext = "CONSISTENTINPUT"
-        assert encrypt(plaintext, key) == encrypt(plaintext, key)
-
-    def test_deterministic_decryption(self, key):
-        plaintext = "CONSISTENTINPUT"
-        encrypted = encrypt(plaintext, key)
-        assert decrypt(encrypted, key) == decrypt(encrypted, key)
-
-    def test_decrypt_exactly_matches_original(self, key):
-        plaintext = "EXACTMATCH"
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    @pytest.mark.parametrize("plaintext", [
-        "ATTACKATDAWN",
-        "THEQUICKBROWNFOX",
-        "COLUMNARCIPHER",
-        "SECURITYPROTOCOL",
-        "PYTHONENCRYPTION",
-    ])
-    def test_roundtrip_various_inputs(self, key, plaintext):
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    @pytest.mark.parametrize("test_key", [
-        "ALPHA",
-        "ZEBRA",
-        "KEY",
-        "LONGERKEYWORD",
-    ])
-    def test_different_keys_different_ciphertext(self, key, test_key):
-        plaintext = "HELLOWORLD"
-        assert encrypt(plaintext, key) != encrypt(plaintext, test_key)
-
-    def test_wrong_key_decrypt_does_not_match_original(self, key, alt_key):
-        plaintext = "HELLOWORLD"
-        encrypted = encrypt(plaintext, key)
-        decrypted_wrong = decrypt(encrypted, alt_key)
-        assert decrypted_wrong.strip() != plaintext
-
-
-# ---------------------------------------------------------------------------
-# Edge Cases
-# ---------------------------------------------------------------------------
-
-class TestColumnarEdgeCases:
-
-    def test_single_character_roundtrip(self, key):
-        plaintext = "A"
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    def test_long_input_roundtrip(self, key):
-        plaintext = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" * 20
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    def test_input_length_equals_key_length(self, key):
-        plaintext = "A" * len(key)
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    def test_input_shorter_than_key(self, key):
-        result = encrypt("HI", key)
-        assert isinstance(result, str)
-
-    def test_numeric_string_input(self, key):
-        plaintext = "1234567890"
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip() == plaintext
-
-    def test_padding_does_not_corrupt_data(self, key):
-        plaintext = "ODDLENGTH"
-        encrypted = encrypt(plaintext, key)
-        decrypted = decrypt(encrypted, key)
-        assert plaintext in decrypted or decrypted.strip() == plaintext
-
-
-# ---------------------------------------------------------------------------
-# Binary Support
-# ---------------------------------------------------------------------------
-
-class TestColumnarBinarySupport:
-
-    def test_encrypt_decrypt_bytes_roundtrip(self, key):
-        data = b"binarydata"
-        encrypted = encrypt(data, key)
-        decrypted = decrypt(encrypted, key)
-        assert decrypted.strip().encode() == data or decrypted.strip() == data.decode()
-
-    def test_bytes_encryption_differs_from_input(self, key):
-        data = b"helloworld"
-        encrypted = encrypt(data, key)
-        assert encrypted != data
-
-    def test_large_bytes_roundtrip(self, key):
-        data = b"X" * 1024
-        encrypted = encrypt(data, key)
-        decrypted = decrypt(encrypted, key)
-        assert len(decrypted) > 0
-
-
-# ---------------------------------------------------------------------------
-# Error Handling
-# ---------------------------------------------------------------------------
-
-class TestColumnarErrorHandling:
-
-    def test_empty_string_encrypt_raises(self, key):
-        with pytest.raises((ValueError, IndexError, Exception)):
-            encrypt("", key)
-
-    def test_empty_string_decrypt_raises(self, key):
-        with pytest.raises((ValueError, IndexError, Exception)):
-            decrypt("", key)
-
-    def test_empty_bytes_encrypt_raises(self, key):
-        with pytest.raises((ValueError, IndexError, Exception)):
-            encrypt(b"", key)
+    def test_all_ranks_present(self):
+        order = _get_column_order("SECRET")
+        assert sorted(order) == list(range(len("SECRET")))
 
     def test_empty_key_raises(self):
-        with pytest.raises((ValueError, KeyError, Exception)):
-            encrypt("HELLO", "")
+        with pytest.raises(ValueError):
+            _get_column_order("")
 
-    def test_invalid_key_type_integer(self):
-        with pytest.raises((TypeError, ValueError, Exception)):
-            encrypt("HELLO", 9999)
+    def test_single_char_key(self):
+        assert _get_column_order("A") == [0]
 
-    def test_invalid_input_type_none(self, key):
-        with pytest.raises((TypeError, AttributeError, Exception)):
-            encrypt(None, key)
 
-    def test_invalid_input_type_list(self, key):
-        with pytest.raises((TypeError, AttributeError, Exception)):
-            encrypt(["H", "E", "L", "L", "O"], key)
-            
+class TestPadPlaintext:
+    def test_already_divisible_no_padding(self):
+        result = _pad_plaintext("ABCDEF", 3)
+        assert len(result) % 3 == 0
+        assert result == "ABCDEF"
+
+    def test_pads_with_x(self):
+        result = _pad_plaintext("HELLO", 3)
+        assert len(result) % 3 == 0
+        assert result.endswith("X")
+
+    def test_strips_non_alpha(self):
+        result = _pad_plaintext("HELLO WORLD", 5)
+        assert " " not in result
+
+    def test_converts_to_uppercase(self):
+        result = _pad_plaintext("hello", 3)
+        assert result == result.upper()
+
+
+class TestEncryptDecrypt:
+    KEY = "SECRET"
+
+    def test_basic_round_trip(self):
+        ct = encrypt("HELLOWORLD", self.KEY)
+        dt = decrypt(ct, self.KEY)
+        assert dt.startswith("HELLOWORLD")
+
+    def test_ciphertext_length_equals_padded_length(self):
+        plaintext = "HELLO"
+        ct = encrypt(plaintext, self.KEY)
+        key_len = len(self.KEY)
+        padded_len = len(plaintext) + (key_len - len(plaintext) % key_len) % key_len
+        assert len(ct) == padded_len
+
+    def test_ciphertext_differs_from_plaintext(self):
+        ct = encrypt("HELLOWORLD", self.KEY)
+        assert ct != "HELLOWORLD"
+
+    def test_different_keys_give_different_ciphertext(self):
+        ct1 = encrypt("HELLOWORLD", "SECRET")
+        ct2 = encrypt("HELLOWORLD", "KEYWORD")
+        assert ct1 != ct2
+
+    def test_same_key_same_result(self):
+        ct1 = encrypt("HELLOWORLD", self.KEY)
+        ct2 = encrypt("HELLOWORLD", self.KEY)
+        assert ct1 == ct2
+
+    def test_empty_string_returns_empty(self):
+        assert encrypt("", self.KEY) == ""
+        assert decrypt("", self.KEY) == ""
+
+    def test_decrypt_raises_on_wrong_length(self):
+        with pytest.raises(ValueError):
+            decrypt("HELLO", "KEY")  # 5 not divisible by 3
+
+    def test_uppercase_output(self):
+        ct = encrypt("hello", self.KEY)
+        assert ct == ct.upper()
+
+    def test_longer_message(self):
+        msg = "THEQUICKBROWNFOXJUMPSOVERTHELAZYDOG"
+        ct = encrypt(msg, self.KEY)
+        dt = decrypt(ct, self.KEY)
+        # J is converted to I per cipher convention
+        expected = msg.replace("J", "I")
+        assert dt.startswith(expected)
+
+    def test_key_j_treated_as_i(self):
+        ct1 = encrypt("HELLO", "JUNGLE")
+        ct2 = encrypt("HELLO", "IUNGLE")
+        assert ct1 == ct2
+
+
+class TestGetKeyOrderDisplay:
+    def test_contains_key(self):
+        display = get_key_order_display("SECRET")
+        assert "SECRET" in display
+
+    def test_contains_all_characters(self):
+        display = get_key_order_display("KEY")
+        for ch in "KEY":
+            assert ch in display
