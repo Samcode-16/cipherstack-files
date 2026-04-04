@@ -106,9 +106,41 @@ def save_keys(keys: dict[str, str], path: Path = _KEYS_FILE) -> None:
 
 def load_keys(path: Path = _KEYS_FILE) -> dict[str, str]:
     """
-    Load keys from *path*.  Raises FileNotFoundError with a helpful message
-    if the file does not exist yet (caller should run --init first).
+    Load keys — checks environment variables first, then falls back to
+    .keys.json for local development.
+
+    On hosted servers (Render, Railway etc.) set these env vars:
+        PLAYFAIR_KEY, COLUMNAR_KEY, DES_KEY
     """
+    # Try environment variables first (production / hosted environment)
+    env_keys = {
+        "playfair": os.environ.get("PLAYFAIR_KEY", ""),
+        "columnar":  os.environ.get("COLUMNAR_KEY", ""),
+        "des":       os.environ.get("DES_KEY", ""),
+    }
+
+    if all(env_keys.values()):
+        _validate_keys(env_keys)
+        return env_keys
+
+    # Fall back to .keys.json for local development
+    # Load .env file if it exists (local dev convenience)
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+        # Re-check env vars after loading .env
+        env_keys = {
+            "playfair": os.environ.get("PLAYFAIR_KEY", ""),
+            "columnar":  os.environ.get("COLUMNAR_KEY", ""),
+            "des":       os.environ.get("DES_KEY", ""),
+        }
+        if all(env_keys.values()):
+            _validate_keys(env_keys)
+            return env_keys
+    except ImportError:
+        pass
+
+    # Final fallback: .keys.json
     if not path.exists():
         raise FileNotFoundError(
             f"Key file not found: {path}\n"

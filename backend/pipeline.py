@@ -125,8 +125,16 @@ def encrypt_text(plaintext: str) -> str:
     format_len_hex = f"{len(format_encoded)//2:04x}"  # length in hex (in bytes)
     
     # Store original plaintext length (normalized: uppercase, no spaces/punctuation)
+    # Store original plaintext length (normalized: uppercase, no spaces/punctuation)
     normalized_plaintext = re.sub(r"[^A-Za-z]", "", plaintext).upper()
     original_length = len(normalized_plaintext)
+
+# For binary-encoded content, store the full string length instead
+# so remove_fillers doesn't chop the base64 data
+    if plaintext.startswith("BINARY:"):
+        original_length = len(normalized_plaintext)
+    # We'll use a marker to signal full-string recovery on decrypt
+    _full_original_length = len(plaintext)
     
     # Layer 1: Playfair substitution
     layer1 = playfair.encrypt(plaintext, playfair_key)

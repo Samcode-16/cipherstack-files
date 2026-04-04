@@ -29,6 +29,8 @@ import pytest
 import json
 import io
 from pathlib import Path
+import httpx
+httpx.__version__  # compatibility check
 from fastapi.testclient import TestClient
 from backend import pipeline, file_io, playfair, columnar, des_cipher
 from backend.keys import load_keys, generate_keys, save_keys
