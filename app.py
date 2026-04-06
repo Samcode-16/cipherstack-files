@@ -44,7 +44,8 @@ app.add_middleware(
 # Configuration
 UPLOAD_FOLDER = Path("uploads")
 OUTPUT_FOLDER = Path("outputs")
-ALLOWED_EXTENSIONS = {'txt', 'log', 'csv', 'json', 'md'}
+ALLOWED_EXTENSIONS = {'txt', 'log', 'csv', 'json', 'md', 'pdf', 'doc', 'docx', 'png', 'jpg', 'jpeg'}
+BINARY_EXTENSIONS = {'pdf', 'doc', 'docx', 'png', 'jpg', 'jpeg'}
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 # Create folders if they don't exist
@@ -86,6 +87,11 @@ class StatusResponse(BaseModel):
 def allowed_file(filename: str) -> bool:
     """Check if file extension is allowed."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def is_binary_file(filename: str) -> bool:
+    """Check if a filename uses a binary file extension."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in BINARY_EXTENSIONS
 
 
 def get_unique_filename(filepath: Path) -> Path:
@@ -154,7 +160,7 @@ async def get_status():
 # ---------------------------------------------------------------------------
 
 @app.post("/api/encrypt")
-async def encrypt_file(file: UploadFile = File(...)):
+async def encrypt_file(file: UploadFile = File(None)):
     """
     Endpoint to encrypt a file.
     
@@ -185,11 +191,12 @@ async def encrypt_file(file: UploadFile = File(...)):
                 detail=f"File too large. Maximum size: {MAX_FILE_SIZE / (1024*1024):.1f} MB"
             )
         
-        # Decrypt content
-        plaintext = contents.decode('utf-8')
-        
-        # Encrypt
-        ciphertext = pipeline.encrypt_text(plaintext)
+        # Encrypt based on file type
+        if is_binary_file(file.filename):
+            ciphertext = pipeline.encrypt_binary(contents)
+        else:
+            plaintext = contents.decode('utf-8')
+            ciphertext = pipeline.encrypt_text(plaintext)
         
         # Return encrypted file using StreamingResponse
         encrypted_filename = f"{Path(file.filename).stem}.encrypted"
@@ -207,7 +214,7 @@ async def encrypt_file(file: UploadFile = File(...)):
 
 
 @app.post("/api/decrypt")
-async def decrypt_file(file: UploadFile = File(...)):
+async def decrypt_file(file: UploadFile = File(None)):
     """
     Endpoint to decrypt a file.
     
@@ -227,7 +234,14 @@ async def decrypt_file(file: UploadFile = File(...)):
         ciphertext = contents.decode('utf-8')
         
         # Decrypt
-        plaintext = pipeline.decrypt_text(ciphertext)
+        if pipeline.is_binary_ciphertext(ciphertext):
+            decrypted_bytes = pipeline.decrypt_binary(ciphertext)
+            output_bytes = decrypted_bytes
+            media_type = 'application/octet-stream'
+        else:
+            plaintext = pipeline.decrypt_text(ciphertext)
+            output_bytes = plaintext.encode('utf-8')
+            media_type = 'text/plain'
         
         # Return decrypted file using StreamingResponse
         decrypted_filename = file.filename.replace('.encrypted', '')
@@ -235,8 +249,8 @@ async def decrypt_file(file: UploadFile = File(...)):
             decrypted_filename = f"decrypted_{file.filename}"
         
         return StreamingResponse(
-            iter([plaintext.encode('utf-8')]),
-            media_type='text/plain',
+            iter([output_bytes]),
+            media_type=media_type,
             headers={"Content-Disposition": f"attachment; filename={decrypted_filename}"}
         )
     

@@ -34,7 +34,7 @@ from backend import pipeline, file_io, playfair, columnar, des_cipher
 from backend.keys import load_keys, generate_keys, save_keys
 
 # Import the FastAPI app
-from app import app, ALLOWED_EXTENSIONS, MAX_FILE_SIZE
+from app import app, ALLOWED_EXTENSIONS, BINARY_EXTENSIONS, MAX_FILE_SIZE
 
 
 # ============================================================================
@@ -288,12 +288,31 @@ class TestFileEncryption:
             
             response = client.post(
                 "/api/encrypt",
-                files={"file": (f"test.{ext}", file_content, "text/plain")}
+                files={"file": (f"test.{ext}", file_content, "application/octet-stream")}
             )
             
-            # Should succeed (200) or fail with file size (not 400 for extension)
-            assert response.status_code in [200, 413, 500]
-    
+            assert response.status_code == 200
+
+    def test_encrypt_binary_extensions(self, client):
+        """Should encrypt and decrypt files using binary extensions."""
+        sample_binary = b"\x89PNG\r\n\x1a\n" + b"\x00\x01\x02\x03\x04"
+
+        for ext in BINARY_EXTENSIONS:
+            binary_file = io.BytesIO(sample_binary)
+            encrypt_response = client.post(
+                "/api/encrypt",
+                files={"file": (f"test.{ext}", binary_file, "application/octet-stream")}
+            )
+            assert encrypt_response.status_code == 200
+
+            decrypted_file = io.BytesIO(encrypt_response.content)
+            decrypt_response = client.post(
+                "/api/decrypt",
+                files={"file": (f"test.{ext}.encrypted", decrypted_file, "application/octet-stream")}
+            )
+            assert decrypt_response.status_code == 200
+            assert decrypt_response.content == sample_binary
+
     def test_encrypt_file_too_large_returns_413(self, client):
         """Should return 413 if file is too large."""
         # Create a file larger than MAX_FILE_SIZE
